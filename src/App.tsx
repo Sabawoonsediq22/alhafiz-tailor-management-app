@@ -1,10 +1,21 @@
-const App = () => {
+import { Button } from "./components/ui/button";
+import { Card, CardContent } from "./components/ui/card";
+import { Table } from "./components/ui/table";
+
+export default function App() {
+
   return (
-    <main className="w-full h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-800">Welcome to Tailor Management.</h1>
-      
-    </main>
+    <div className="min-h-screen p-6">
+      <Card>
+        <CardContent>
+          Hello World
+          <Button variant={"default"}>clifff</Button>
+        </CardContent>
+      </Card>
+      <Table>
+        hfgj
+      </Table>
+
+    </div>
   );
 }
-
-export default App;
