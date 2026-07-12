@@ -1,5 +1,6 @@
 import MainLayout from "./components/MainLayout";
 import { Routes, Route, Navigate } from "react-router";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -7,9 +8,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={
-          <div>
-            Dashboard Content
-          </div>
+          <Dashboard/>
         } />
         <Route path="/customers" element={
           <div>

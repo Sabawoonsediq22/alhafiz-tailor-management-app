@@ -142,7 +142,7 @@ const MainLayout: React.FC = () => {
                 <>
                   <span className="flex-1 font-bold">{item.name}</span>
                   {item.badge && (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">
+                    <span className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${isActive ? "bg-white text-primary" : "bg-primary/10 text-primary"}`}>
                       {item.badge}
                     </span>
                   )}
@@ -202,7 +202,14 @@ const MainLayout: React.FC = () => {
               >
                 <Globe2 className="h-4 w-4" />
               </Button>
-              <span className="absolute left-full ml-2 hidden rounded-md bg-gray-900 px-2 py-1 text-xs text-white group-hover:block whitespace-nowrap z-50">
+              <span
+                className={cn(
+                  "absolute hidden rounded-md bg-gray-900 px-2 py-1 text-xs text-white group-hover:block whitespace-nowrap z-50 bottom-1.5",
+                  isRTL
+                    ? "right-full mr-2"
+                    : "left-full ml-2",
+                )}
+              >
                 {language.toUpperCase()}
               </span>
             </div>
@@ -213,7 +220,7 @@ const MainLayout: React.FC = () => {
   );
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex h-screen w-full overflow-hidden bg-sidebar">
       {/* Mobile backdrop */}
       {mobileMenuOpen && (
         <div
@@ -225,7 +232,7 @@ const MainLayout: React.FC = () => {
       {/* Sidebar - Desktop */}
       <aside
         className={cn(
-          "hidden lg:flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 ease-in-out",
+          "hidden lg:flex flex-col border-r border-sidebar-border bg-white transition-all duration-300 ease-in-out",
           sidebarOpen ? "w-64" : "w-16",
         )}
       >
@@ -235,7 +242,7 @@ const MainLayout: React.FC = () => {
       {/* Sidebar - Mobile Drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 z-50 w-64 flex flex-col border-r border-sidebar-border bg-sidebar transform transition-transform duration-300 lg:hidden",
+          "fixed inset-y-0 z-50 w-64 flex flex-col border-r border-sidebar-border bg-white transform transition-transform duration-300 lg:hidden",
           isRTL ? "right-0" : "left-0",
           mobileMenuOpen ? "translate-x-0" : (isRTL ? "translate-x-full" : "-translate-x-full"),
         )}
@@ -456,7 +463,7 @@ const MainLayout: React.FC = () => {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto bg-background">
+         <div className="flex-1 overflow-y-auto bg-sidebar">
           <div className="p-4 lg:p-6">
             <Outlet />
           </div>
