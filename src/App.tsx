@@ -1,21 +1,44 @@
-import { Button } from "./components/ui/button";
-import { Card, CardContent } from "./components/ui/card";
-import { Table } from "./components/ui/table";
+import MainLayout from "./components/MainLayout";
+import { Routes, Route, Navigate } from "react-router";
 
-export default function App() {
-
+function App() {
   return (
-    <div className="min-h-screen p-6">
-      <Card>
-        <CardContent>
-          Hello World
-          <Button variant={"default"}>clifff</Button>
-        </CardContent>
-      </Card>
-      <Table>
-        hfgj
-      </Table>
-
-    </div>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={
+          <div>
+            Dashboard Content
+          </div>
+        } />
+        <Route path="/customers" element={
+          <div>
+            Customers Content
+          </div>
+        } />
+        <Route path="/orders" element={
+          <div>
+            Orders Content
+          </div>
+        } />
+        <Route path="/inventory" element={
+          <div>
+            Inventory Content
+          </div>
+        } />
+        <Route path="/reports" element={
+          <div>
+            Reports Content
+          </div>
+        } />
+        <Route path="/settings" element={
+          <div>
+            Settings Content
+          </div>
+        } />
+      </Route>
+    </Routes>
   );
 }
+
+export default App;
