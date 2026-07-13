@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { cn } from "../lib/utils";
-import { Button } from "./ui/button";
-import { useLanguage } from "../hooks/useLanguage";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
+import { useLanguage } from "../../hooks/useLanguage";
 import {
   LayoutDashboard,
   Users,
@@ -142,7 +142,9 @@ const MainLayout: React.FC = () => {
                 <>
                   <span className="flex-1 font-bold">{item.name}</span>
                   {item.badge && (
-                    <span className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${isActive ? "bg-white text-primary" : "bg-primary/10 text-primary"}`}>
+                    <span
+                      className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${isActive ? "bg-white text-primary" : "bg-primary/10 text-primary"}`}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -194,20 +196,14 @@ const MainLayout: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-                onClick={() =>
-                  setLanguage(
-                    language === "ps" ? "en" : "ps",
-                  )
-                }
+                onClick={() => setLanguage(language === "ps" ? "en" : "ps")}
               >
                 <Globe2 className="h-4 w-4" />
               </Button>
               <span
                 className={cn(
                   "absolute hidden rounded-md bg-gray-900 px-2 py-1 text-xs text-white group-hover:block whitespace-nowrap z-50 bottom-1.5",
-                  isRTL
-                    ? "right-full mr-2"
-                    : "left-full ml-2",
+                  isRTL ? "right-full mr-2" : "left-full ml-2",
                 )}
               >
                 {language.toUpperCase()}
@@ -244,7 +240,11 @@ const MainLayout: React.FC = () => {
         className={cn(
           "fixed inset-y-0 z-50 w-64 flex flex-col border-r border-sidebar-border bg-white transform transition-transform duration-300 lg:hidden",
           isRTL ? "right-0" : "left-0",
-          mobileMenuOpen ? "translate-x-0" : (isRTL ? "translate-x-full" : "-translate-x-full"),
+          mobileMenuOpen
+            ? "translate-x-0"
+            : isRTL
+              ? "translate-x-full"
+              : "-translate-x-full",
         )}
       >
         <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
@@ -354,21 +354,23 @@ const MainLayout: React.FC = () => {
               >
                 <Home className="h-3.5 w-3.5" />
               </NavLink>
-              {getBreadcrumbs().slice(1).map((crumb, index) => (
-                <React.Fragment key={crumb.href}>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
-                  <span
-                    className={cn(
-                      "flex items-center gap-1.5",
-                      index === getBreadcrumbs().length - 2
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {crumb.name}
-                  </span>
-                </React.Fragment>
-              ))}
+              {getBreadcrumbs()
+                .slice(1)
+                .map((crumb, index) => (
+                  <React.Fragment key={crumb.href}>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
+                    <span
+                      className={cn(
+                        "flex items-center gap-1.5",
+                        index === getBreadcrumbs().length - 2
+                          ? "text-foreground font-medium"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {crumb.name}
+                    </span>
+                  </React.Fragment>
+                ))}
             </nav>
           </div>
 
@@ -414,11 +416,7 @@ const MainLayout: React.FC = () => {
               variant="ghost"
               size="icon"
               className="hidden lg:flex h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-accent"
-                onClick={() =>
-                  setLanguage(
-                    language === "ps" ? "en" : "ps",
-                  )
-                }
+              onClick={() => setLanguage(language === "ps" ? "en" : "ps")}
             >
               <Globe2 className="h-4.5 w-4.5" />
               <span className="sr-only">{t("settings.language")}</span>
@@ -463,7 +461,7 @@ const MainLayout: React.FC = () => {
         </header>
 
         {/* Page Content */}
-         <div className="flex-1 overflow-y-auto bg-sidebar">
+        <div className="flex-1 overflow-y-auto bg-sidebar">
           <div className="p-4 lg:p-6">
             <Outlet />
           </div>

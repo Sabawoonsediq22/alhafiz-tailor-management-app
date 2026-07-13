@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
         <div className="p-6 pt-0">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Link
-              to="/customers?newCustomer=true"
+              to="/new-customer"
               className="flex items-center gap-4 rounded-lg border border-gray-200 p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
             >
               <div className="flex items-center gap-4">
@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
                     {t("dashboard.newCustomer")}
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Add a new customer
+                    {t("dashboard.addNewCustomer")}
                   </p>
                 </div>
               </div>
@@ -69,10 +69,10 @@ const Dashboard: React.FC = () => {
               </div>
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">
-                  {t("nav.inventory")}
+                  {t("dashboard.inventory")}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Manage inventory
+                  {t("dashboard.manageInventory")}
                 </p>
               </div>
             </Link>
@@ -188,3 +188,7 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+
+
+
+

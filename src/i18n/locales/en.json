@@ -229,8 +229,11 @@
     "quickActions": "Quick Actions",
     "newOrder": "New Order",
     "newCustomer": "New Customer",
+    "addNewCustomer": "Add a New Customer",
     "orders": "Orders",
     "viewAllOrders": "View all orders",
+    "inventory": "Inventory",
+    "manageInventory": "Manage inventory",
     "reports": "Reports",
     "viewAllReports": "View all reports",
     "earnings": {
