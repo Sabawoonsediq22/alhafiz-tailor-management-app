@@ -31,7 +31,7 @@ interface NavItem {
   badge?: number;
 }
 
-const MainLayout: React.FC = () => {
+const Layout: React.FC = () => {
   const { t } = useTranslation();
   const { language, setLanguage, isRTL } = useLanguage();
   const location = useLocation();
@@ -53,15 +53,6 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
-
-  const getPageTitle = () => {
-    const navItem = navigation.find((item) =>
-      location.pathname.startsWith(item.href),
-    );
-    if (navItem) return navItem.name;
-    if (location.pathname === "/") return t("dashboard.title");
-    return t("dashboard.title");
-  };
 
   const getBreadcrumbs = () => {
     const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -374,10 +365,6 @@ const MainLayout: React.FC = () => {
             </nav>
           </div>
 
-          <h1 className="text-base font-semibold text-foreground lg:hidden">
-            {getPageTitle()}
-          </h1>
-
           <div className="flex items-center gap-1.5">
             {/* Search */}
             <div
@@ -471,4 +458,4 @@ const MainLayout: React.FC = () => {
   );
 };
 
-export default MainLayout;
+export default Layout;

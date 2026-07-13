@@ -1,4 +1,4 @@
-import MainLayout from "./components/common/MainLayout";
+import Layout from "./components/common/Layout";
 import { Routes, Route, Navigate } from "react-router";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
@@ -11,7 +11,7 @@ import Settings from "./pages/Settings";
 function App() {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
+      <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/customers" element={<Customers />} />
