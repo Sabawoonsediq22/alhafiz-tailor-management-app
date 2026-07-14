@@ -66,11 +66,10 @@ export interface Order {
   orderDate: Date;
   deliveryDate: Date;
   status: string;
-  advancePayment: number;
   totalCost: number;
   paid: number;
   unpaid: number;
-  balanceDue: number;
+  quantity: number;
   notes?: string;
   createdAt: Date;
   updatedAt: Date;

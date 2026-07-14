@@ -143,8 +143,8 @@ const formSchema = z.object({
     deliveryDate: z.date().optional(),
     status: z.enum(ORDER_STATUSES),
     measurementType: z.enum(MEASUREMENT_TYPES),
+    quantity: numberField(false, "Quantity"),
     totalCost: numberField(false, "Total cost"),
-    advancePayment: numberField(false, "Advance payment"),
   }),
   notes: z.string().optional(),
 })
@@ -334,8 +334,8 @@ export default function NewCustomer() {
         deliveryDate: undefined,
         status: "Pending",
         measurementType: "clothes",
+        quantity: "1",
         totalCost: "",
-        advancePayment: "",
       },
       notes: "",
     },
@@ -346,8 +346,7 @@ export default function NewCustomer() {
   const values = watch()
 
   const totalCost = Number(values.order.totalCost) || 0
-  const advancePayment = Number(values.order.advancePayment) || 0
-  const balanceDue = Math.max(totalCost - advancePayment, 0)
+  const balanceDue = totalCost
 
   const onSubmit = async (data: FormValues) => {
     const toOptNumber = (value: string | undefined) => {
@@ -448,8 +447,8 @@ export default function NewCustomer() {
         order_date: data.order.orderDate.toISOString(),
         delivery_date: data.order.deliveryDate?.toISOString(),
         status: data.order.status,
-        advance_payment: Number(data.order.advancePayment) || 0,
         total_cost: Number(data.order.totalCost) || 0,
+        quantity: Number(data.order.quantity) || 1,
         notes: data.notes?.trim() || undefined,
       })
 
@@ -731,7 +730,7 @@ export default function NewCustomer() {
                 </div>
               </CardHeader>
               <CardContent className="grid gap-4">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-3">
                   <FormField
                     control={control}
                     name="order.orderNumber"
@@ -775,6 +774,11 @@ export default function NewCustomer() {
                         <FormMessage />
                       </FormItem>
                     )}
+                  />
+                  <NumberInput
+                    control={control}
+                    name="order.quantity"
+                    label="Quantity"
                   />
                 </div>
 
@@ -859,39 +863,6 @@ export default function NewCustomer() {
                               inputMode="decimal"
                               step="0.01"
                               aria-label="Total cost"
-                              placeholder="0"
-                              className="pe-14"
-                              value={field.value == null ? "" : (field.value as string)}
-                              onChange={field.onChange}
-                              onBlur={field.onBlur}
-                              name={field.name}
-                              ref={field.ref}
-                              aria-invalid={!!fieldState.error}
-                            />
-                            <span className="pointer-events-none absolute inset-y-0 inset-e-3 flex items-center text-sm text-muted-foreground">
-                              {CURRENCY}
-                            </span>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name="order.advancePayment"
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <SectionLabel icon={Receipt}>
-                          Advance Payment
-                        </SectionLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              type="number"
-                              inputMode="decimal"
-                              step="0.01"
-                              aria-label="Advance payment"
                               placeholder="0"
                               className="pe-14"
                               value={field.value == null ? "" : (field.value as string)}
@@ -1002,12 +973,6 @@ export default function NewCustomer() {
                     <span className="text-muted-foreground">Total Cost</span>
                     <span className="font-medium">
                       {totalCost.toLocaleString()} {CURRENCY}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Advance</span>
-                    <span className="font-medium">
-                      {advancePayment.toLocaleString()} {CURRENCY}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
