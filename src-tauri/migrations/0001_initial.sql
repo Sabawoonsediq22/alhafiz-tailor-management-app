@@ -2,73 +2,77 @@
 CREATE TABLE IF NOT EXISTS customers (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    address TEXT,
+    phone TEXT,                                   -- شمیره (Phone)
+    address TEXT,                                 -- پته (Address)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Clothes Measurements Table
 CREATE TABLE IF NOT EXISTS clothes_measurements (
-    id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    length REAL,
-    sleeve REAL,
-    shoulder REAL,
-    armhole REAL,
-    chest REAL,
-    side REAL,
-    skirt REAL,
-    trousers REAL,
-    leg_opening REAL,
-    cuff REAL,
-    sleeve_design TEXT,
-    bottom REAL,
-    pleat REAL,
-    pocket_top TEXT,
-    pocket_side TEXT,
-    trousers_pocket TEXT,
-    button TEXT,
-    stitching TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id TEXT PRIMARY KEY,                           -- آئی ڈی
+    customer_id TEXT NOT NULL,                     -- د پیرودونکی آئی ڈی
+    name TEXT,                            -- نوم
+    length REAL,                                   -- قد (Length)
+    sleeve REAL,                                   -- استین (Sleeve)
+    shoulder REAL,                                 -- شانه (Shoulder)
+    armhole REAL,                                  -- یخن (Armhole / Underarm)
+    chest REAL,                                    -- سینه (Chest)
+    side REAL,                                     -- بغل (Side / Underarm)
+    skirt REAL,                                    -- دامن (Skirt / Lower hem)
+    trousers REAL,                                 -- تمبان (Trousers / Pants)
+    leg_opening REAL,                              -- پاچه (Leg opening)
+    cuff REAL,                                     -- پټۍ (Cuff / Band)
+    sleeve_design TEXT,                            -- استین ډیزاین (Sleeve design)
+    bottom REAL,                                   -- کف (Bottom / Sole)
+    neck REAL,                                    -- غاړه (Neck)
+    pocket_top TEXT,                               -- روی جیب (Pocket top)
+    pocket_side TEXT,                              -- بغل جیب (Pocket side)
+    skirt_design TEXT,                             -- دامن ډیزاین (Skirt design / Lower hem)
+    trousers_design TEXT,                          -- تمبان ډیزاین (Trousers design / Pants)
+    trousers_pocket TEXT,                          -- تمبان جیب (Pants pocket)
+    button TEXT,                                   -- تکمه (Button)
+    stitching TEXT,                                -- دوخت (Stitching)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- د جوړیدو نیټه
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- د تازه کیدو نیټه
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
 
 -- Waistcoat Measurements Table
 CREATE TABLE IF NOT EXISTS waistcoat_measurements (
-    id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    length REAL,
-    shoulder REAL,
-    side REAL,
-    waist REAL,
-    tureen REAL,
-    armhole REAL,
-    pleat REAL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id TEXT PRIMARY KEY,                                      -- آئی ډی (ID)
+    customer_id TEXT NOT NULL,                               -- د پیرودونکی آئی ډی (Customer ID)
+    name TEXT,                                      -- نوم (Name)
+    length REAL,                                             -- قد (Length)
+    shoulder REAL,                                           -- شانه (Shoulder)
+    side REAL,                                               -- بغل (Side)
+    waist REAL,                                              -- کمر (Waist)
+    tureen REAL,                                             -- تورین (Tureen / Chest)
+    armhole REAL,                                            -- یخن (Armhole)
+    neck TEXT,                                               -- غاړه (Neck)  <-- fixed (was pleat)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,           -- جوړیدو نیټه (Created at)
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,           -- تازه شوې نیټه (Updated at)
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
 
 -- Orders Table
 CREATE TABLE IF NOT EXISTS orders (
-    id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL,
-    clothes_measurement_id TEXT,
-    waistcoat_measurement_id TEXT,
-    order_number TEXT UNIQUE NOT NULL,
-    order_date DATETIME NOT NULL,
-    delivery_date DATETIME NOT NULL,
-    status TEXT NOT NULL,
-    advance_payment REAL DEFAULT 0,
-    total_cost REAL DEFAULT 0,
-    balance_due REAL DEFAULT 0,
-    notes TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id TEXT PRIMARY KEY,                                      -- آئی ډی (ID)
+    customer_id TEXT NOT NULL,                               -- د پیرودونکی آئی ډی (Customer ID)
+    clothes_measurement_id TEXT,                             -- د جامو اندازه اخیستو آئی ډی (Clothes Measurement ID)
+    waistcoat_measurement_id TEXT,                           -- د واسکټ اندازه اخیستو آئی ډی (Waistcoat Measurement ID)
+    order_number TEXT UNIQUE NOT NULL,                       -- د امر شمېره (Order Number)
+    order_date DATETIME,                                     -- د امر نیټه (Order Date)
+    delivery_date DATETIME,                                  -- د سپارلو نیټه (Delivery Date)
+    status TEXT,                                             -- حالت (Status)
+    advance_payment REAL DEFAULT 0,                          -- مخکې ورکړه (Advance Payment)
+    total_cost REAL DEFAULT 0,                               -- ټول لګښت (Total Cost)
+    paid REAL DEFAULT 0,                                     -- ورکړل شوي پیسې (Paid)
+    unpaid REAL DEFAULT 0,                                   -- نه دي ورکړل شوي (Unpaid)
+    balance_due REAL DEFAULT 0,                              -- پاتې پیسې (Balance Due)
+    notes TEXT,                                              -- یادښتونه (Notes)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,           -- جوړیدو نیټه (Created at)
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,           -- تازه شوې نیټه (Updated at)
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
     FOREIGN KEY (clothes_measurement_id) REFERENCES clothes_measurements(id) ON DELETE SET NULL,
     FOREIGN KEY (waistcoat_measurement_id) REFERENCES waistcoat_measurements(id) ON DELETE SET NULL

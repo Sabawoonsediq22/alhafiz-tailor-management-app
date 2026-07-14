@@ -3,6 +3,8 @@ use std::sync::Arc;
 use tauri::Manager;
 
 mod db;
+mod error;
+mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -31,7 +33,12 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![])
+        .invoke_handler(tauri::generate_handler![
+            commands::create_customer,
+            commands::create_clothes_measurement,
+            commands::create_waistcoat_measurement,
+            commands::create_order,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -27,9 +27,11 @@ export interface ClothesMeasurement {
   cuff: number; // پټۍ
   sleeveDesign: string; // استین ډیزاین
   bottom: number; // کف
-  pleat: number; // غاړه
+  neck: number; // غاړه
   pocketTop: string; // روی جیب
   pocketSide: string; // بغل جیب
+  skirtDesign: string; // دامن ډیزاین
+  trousersDesign: string; // تمبان ډیزاین
   trousersPocket: string; // تمبان جیب
   button: string; // تکمه
   stitching: string; // دوخت
@@ -49,7 +51,7 @@ export interface WaistcoatMeasurement {
   waist: number; // کمر
   tureen: number; // تورین
   armhole: number; // یخن
-  pleat: number; // غاړه
+  neck: string; // غاړه
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,9 +65,11 @@ export interface Order {
   measurementType: 'clothes' | 'waistcoat';
   orderDate: Date;
   deliveryDate: Date;
-  status: 'Draft' | 'In Progress' | 'Ready' | 'Delivered';
+  status: string;
   advancePayment: number;
   totalCost: number;
+  paid: number;
+  unpaid: number;
   balanceDue: number;
   notes?: string;
   createdAt: Date;
