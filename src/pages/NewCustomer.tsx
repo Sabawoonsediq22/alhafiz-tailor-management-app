@@ -366,10 +366,32 @@ export default function NewCustomer() {
 
       let clothesMeasurementId: string | undefined
       const clothesName = data.clothes.name?.trim()
-      if (clothesName) {
+      const hasClothesData =
+        clothesName ||
+        data.clothes.length ||
+        data.clothes.sleeve ||
+        data.clothes.shoulder ||
+        data.clothes.armhole ||
+        data.clothes.chest ||
+        data.clothes.side ||
+        data.clothes.skirt ||
+        data.clothes.trousers ||
+        data.clothes.legOpening ||
+        data.clothes.cuff ||
+        data.clothes.bottom ||
+        data.clothes.neck ||
+        data.clothes.sleeveDesign ||
+        data.clothes.pocketTop ||
+        data.clothes.pocketSide ||
+        data.clothes.skirtDesign ||
+        data.clothes.trousersDesign ||
+        data.clothes.trousersPocket ||
+        data.clothes.button ||
+        data.clothes.stitching
+      if (hasClothesData) {
         clothesMeasurementId = await createClothesMeasurement({
           customer_id: customerId,
-          name: clothesName,
+          name: clothesName || `${data.customer.name}'s Clothes`,
           length: toOptNumber(data.clothes.length),
           sleeve: toOptNumber(data.clothes.sleeve),
           shoulder: toOptNumber(data.clothes.shoulder),
@@ -395,10 +417,19 @@ export default function NewCustomer() {
 
       let waistcoatMeasurementId: string | undefined
       const waistcoatName = data.waistcoat.name?.trim()
-      if (waistcoatName) {
+      const hasWaistcoatData =
+        waistcoatName ||
+        data.waistcoat.length ||
+        data.waistcoat.shoulder ||
+        data.waistcoat.side ||
+        data.waistcoat.waist ||
+        data.waistcoat.tureen ||
+        data.waistcoat.armhole ||
+        data.waistcoat.neck
+      if (hasWaistcoatData) {
         waistcoatMeasurementId = await createWaistcoatMeasurement({
           customer_id: customerId,
-          name: waistcoatName,
+          name: waistcoatName || `${data.customer.name}'s Waistcoat`,
           length: toOptNumber(data.waistcoat.length),
           shoulder: toOptNumber(data.waistcoat.shoulder),
           side: toOptNumber(data.waistcoat.side),
@@ -837,7 +868,7 @@ export default function NewCustomer() {
                               ref={field.ref}
                               aria-invalid={!!fieldState.error}
                             />
-                            <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-sm text-muted-foreground">
+                            <span className="pointer-events-none absolute inset-y-0 inset-e-3 flex items-center text-sm text-muted-foreground">
                               {CURRENCY}
                             </span>
                           </div>
@@ -870,7 +901,7 @@ export default function NewCustomer() {
                               ref={field.ref}
                               aria-invalid={!!fieldState.error}
                             />
-                            <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-sm text-muted-foreground">
+                            <span className="pointer-events-none absolute inset-y-0 inset-e-3 flex items-center text-sm text-muted-foreground">
                               {CURRENCY}
                             </span>
                           </div>
