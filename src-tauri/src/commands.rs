@@ -15,7 +15,7 @@ fn parse_datetime(value: &str) -> Result<DateTime<Utc>, AppError> {
         .map_err(|e| AppError::Parse(e.to_string()))
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn create_customer(
     db: State<'_, Db>,
     name: String,
@@ -35,7 +35,7 @@ pub async fn create_customer(
     Ok(id)
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn create_clothes_measurement(
     db: State<'_, Db>,
     customer_id: String,
@@ -98,7 +98,7 @@ pub async fn create_clothes_measurement(
     Ok(id)
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn create_waistcoat_measurement(
     db: State<'_, Db>,
     customer_id: String,
@@ -133,7 +133,7 @@ pub async fn create_waistcoat_measurement(
     Ok(id)
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn create_order(
     db: State<'_, Db>,
     customer_id: String,

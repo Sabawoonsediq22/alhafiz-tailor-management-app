@@ -95,7 +95,7 @@ const numberField = (required = false, label = "Value") =>
     )
 
 const clothesSchema = z.object({
-  name: z.string().min(1, "Measurement name is required"),
+  name: z.string().optional(),
   length: numberField(),
   sleeve: numberField(),
   shoulder: numberField(),
@@ -119,7 +119,7 @@ const clothesSchema = z.object({
 })
 
 const waistcoatSchema = z.object({
-  name: z.string().min(1, "Measurement name is required"),
+  name: z.string().optional(),
   length: numberField(),
   shoulder: numberField(),
   side: numberField(),
@@ -143,7 +143,7 @@ const formSchema = z.object({
     deliveryDate: z.date().optional(),
     status: z.enum(ORDER_STATUSES),
     measurementType: z.enum(MEASUREMENT_TYPES),
-    totalCost: numberField(true, "Total cost"),
+    totalCost: numberField(false, "Total cost"),
     advancePayment: numberField(false, "Advance payment"),
   }),
   notes: z.string().optional(),
@@ -365,10 +365,11 @@ export default function NewCustomer() {
       })
 
       let clothesMeasurementId: string | undefined
-      if (data.clothes.name.trim()) {
+      const clothesName = data.clothes.name?.trim()
+      if (clothesName) {
         clothesMeasurementId = await createClothesMeasurement({
           customer_id: customerId,
-          name: data.clothes.name,
+          name: clothesName,
           length: toOptNumber(data.clothes.length),
           sleeve: toOptNumber(data.clothes.sleeve),
           shoulder: toOptNumber(data.clothes.shoulder),
@@ -393,10 +394,11 @@ export default function NewCustomer() {
       }
 
       let waistcoatMeasurementId: string | undefined
-      if (data.waistcoat.name.trim()) {
+      const waistcoatName = data.waistcoat.name?.trim()
+      if (waistcoatName) {
         waistcoatMeasurementId = await createWaistcoatMeasurement({
           customer_id: customerId,
-          name: data.waistcoat.name,
+          name: waistcoatName,
           length: toOptNumber(data.waistcoat.length),
           shoulder: toOptNumber(data.waistcoat.shoulder),
           side: toOptNumber(data.waistcoat.side),
@@ -587,7 +589,7 @@ export default function NewCustomer() {
                       name="clothes.name"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <SectionLabel icon={Plus} required>
+                          <SectionLabel icon={Plus}>
                             Measurement Name
                           </SectionLabel>
                           <FormControl>
@@ -636,7 +638,7 @@ export default function NewCustomer() {
                       name="waistcoat.name"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <SectionLabel icon={Plus} required>
+                          <SectionLabel icon={Plus}>
                             Measurement Name
                           </SectionLabel>
                           <FormControl>
@@ -816,7 +818,7 @@ export default function NewCustomer() {
                     name="order.totalCost"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <SectionLabel icon={Receipt} required>
+                        <SectionLabel icon={Receipt}>
                           Total Cost
                         </SectionLabel>
                         <FormControl>

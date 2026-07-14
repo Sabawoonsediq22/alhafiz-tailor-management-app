@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use tauri::Manager;
 
 mod db;
@@ -10,7 +8,11 @@ mod commands;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .level(log::LevelFilter::Info)
+                .build(),
+        )
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::new().build())
@@ -29,7 +31,7 @@ pub fn run() {
 
             let pool = tauri::async_runtime::block_on(db::init(&db_path))
                 .expect("failed to initialize database");
-            app.manage(Arc::new(pool));
+            app.manage(pool);
 
             Ok(())
         })
