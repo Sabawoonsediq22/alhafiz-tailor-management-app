@@ -144,6 +144,8 @@ pub async fn create_order(
     delivery_date: Option<String>,
     status: Option<String>,
     quantity: i64,
+    unit_price: f64,
+    paid: f64,
     total_cost: f64,
     notes: Option<String>,
 ) -> Result<String, AppError> {
@@ -161,15 +163,14 @@ pub async fn create_order(
         _ => None,
     };
 
-    let paid = 0.0;
-    let unpaid = total_cost;
+    let unpaid = (total_cost - paid).max(0.0);
 
     sqlx::query(
         "INSERT INTO orders (
             id, customer_id, clothes_measurement_id, waistcoat_measurement_id,
             order_number, order_date, delivery_date, status,
-            total_cost, paid, unpaid, quantity, notes
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            quantity, unit_price, total_cost, paid, unpaid, notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     )
     .bind(&id)
     .bind(&customer_id)
@@ -179,10 +180,11 @@ pub async fn create_order(
     .bind(parsed_order_date.map(|d| d.to_rfc3339()))
     .bind(parsed_delivery_date.map(|d| d.to_rfc3339()))
     .bind(&status)
+    .bind(quantity)
+    .bind(unit_price)
     .bind(total_cost)
     .bind(paid)
     .bind(unpaid)
-    .bind(quantity)
     .bind(&notes)
     .execute(&*db)
     .await?;

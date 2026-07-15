@@ -75,8 +75,10 @@ export interface CreateOrderInput {
   order_date?: string
   delivery_date?: string
   status?: string
-  total_cost: number
   quantity?: number
+  unit_price?: number
+  paid?: number
+  total_cost: number
   notes?: string
 }
 

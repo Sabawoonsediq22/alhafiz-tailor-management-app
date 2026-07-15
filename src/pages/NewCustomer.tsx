@@ -14,7 +14,6 @@ import {
   Ruler,
   Scissors,
   ShoppingBag,
-  Receipt,
   StickyNote,
   ClipboardList,
   X,
@@ -144,7 +143,8 @@ const formSchema = z.object({
     status: z.enum(ORDER_STATUSES),
     measurementType: z.enum(MEASUREMENT_TYPES),
     quantity: numberField(false, "Quantity"),
-    totalCost: numberField(false, "Total cost"),
+    unitPrice: numberField(false, "Unit price"),
+    paid: numberField(false, "Paid"),
   }),
   notes: z.string().optional(),
 })
@@ -335,18 +335,22 @@ export default function NewCustomer() {
         status: "Pending",
         measurementType: "clothes",
         quantity: "1",
-        totalCost: "",
+        unitPrice: "",
+        paid: "",
       },
       notes: "",
     },
   })
 
-  const { control, handleSubmit, watch, reset } = form
+  const { control, handleSubmit, watch, reset, setValue } = form
 
   const values = watch()
 
-  const totalCost = Number(values.order.totalCost) || 0
-  const balanceDue = totalCost
+  const unitPrice = Number(values.order.unitPrice) || 0
+  const orderQuantity = Number(values.order.quantity) || 0
+  const paid = Number(values.order.paid) || 0
+  const totalCost = unitPrice * orderQuantity
+  const balanceDue = Math.max(totalCost - paid, 0)
 
   const onSubmit = async (data: FormValues) => {
     const toOptNumber = (value: string | undefined) => {
@@ -439,6 +443,13 @@ export default function NewCustomer() {
         })
       }
 
+      const measurementType: "clothes" | "waistcoat" = hasClothesData
+        ? "clothes"
+        : hasWaistcoatData
+          ? "waistcoat"
+          : "clothes"
+      setValue("order.measurementType", measurementType)
+
       await createOrder({
         customer_id: customerId,
         clothes_measurement_id: clothesMeasurementId,
@@ -447,8 +458,11 @@ export default function NewCustomer() {
         order_date: data.order.orderDate.toISOString(),
         delivery_date: data.order.deliveryDate?.toISOString(),
         status: data.order.status,
-        total_cost: Number(data.order.totalCost) || 0,
         quantity: Number(data.order.quantity) || 1,
+        unit_price: Number(data.order.unitPrice) || 0,
+        paid: Number(data.order.paid) || 0,
+        total_cost:
+          (Number(data.order.unitPrice) || 0) * (Number(data.order.quantity) || 1),
         notes: data.notes?.trim() || undefined,
       })
 
@@ -730,7 +744,7 @@ export default function NewCustomer() {
                 </div>
               </CardHeader>
               <CardContent className="grid gap-4">
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <FormField
                     control={control}
                     name="order.orderNumber"
@@ -750,27 +764,6 @@ export default function NewCustomer() {
                             ref={field.ref}
                           />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name="order.measurementType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <SectionLabel icon={Ruler}>
-                          Measurement Type
-                        </SectionLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="w-full" aria-label="Measurement type">
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="clothes">Clothes</SelectItem>
-                            <SelectItem value="waistcoat">Waistcoat</SelectItem>
-                          </SelectContent>
-                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -848,39 +841,25 @@ export default function NewCustomer() {
                 <Separator />
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <FormField
+                  <NumberInput
                     control={control}
-                    name="order.totalCost"
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <SectionLabel icon={Receipt}>
-                          Total Cost
-                        </SectionLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              type="number"
-                              inputMode="decimal"
-                              step="0.01"
-                              aria-label="Total cost"
-                              placeholder="0"
-                              className="pe-14"
-                              value={field.value == null ? "" : (field.value as string)}
-                              onChange={field.onChange}
-                              onBlur={field.onBlur}
-                              name={field.name}
-                              ref={field.ref}
-                              aria-invalid={!!fieldState.error}
-                            />
-                            <span className="pointer-events-none absolute inset-y-0 inset-e-3 flex items-center text-sm text-muted-foreground">
-                              {CURRENCY}
-                            </span>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    name="order.unitPrice"
+                    label="Unit Price"
                   />
+                  <NumberInput
+                    control={control}
+                    name="order.paid"
+                    label="Paid"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between rounded-lg border border-dashed bg-muted/40 px-4 py-3 text-sm">
+                  <span className="text-muted-foreground">
+                    Total Cost (Unit Price &times; Quantity)
+                  </span>
+                  <span className="font-semibold text-primary">
+                    {totalCost.toLocaleString()} {CURRENCY}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -973,6 +952,12 @@ export default function NewCustomer() {
                     <span className="text-muted-foreground">Total Cost</span>
                     <span className="font-medium">
                       {totalCost.toLocaleString()} {CURRENCY}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Paid</span>
+                    <span className="font-medium">
+                      {paid.toLocaleString()} {CURRENCY}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
