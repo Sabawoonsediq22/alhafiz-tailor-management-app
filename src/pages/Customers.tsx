@@ -1,6 +1,9 @@
 const Customers = () => {
+
   return (
-    <div>Customers</div>
+    <div className="space-y-4">
+      
+    </div>
   );
 };
 
