@@ -1,38 +1,36 @@
-import * as React from "react"
-import { CheckIcon, ChevronDownIcon } from "lucide-react"
+import * as React from "react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 
 interface EditableComboboxOption {
-  value: string
-  label: string
+  label: string;
 }
 
-interface EditableComboboxProps
-  extends Omit<React.ComponentProps<"input">, "size"> {
-  options: EditableComboboxOption[]
-  value?: string
-  defaultValue?: string
-  onValueChange?: (value: string) => void
-  placeholder?: string
-  searchPlaceholder?: string
-  emptyMessage?: string
-  disabled?: boolean
-  className?: string
-  size?: "default" | "sm" | "lg"
+interface EditableComboboxProps extends Omit<
+  React.ComponentProps<"input">,
+  "size"
+> {
+  options: EditableComboboxOption[];
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  disabled?: boolean;
+  className?: string;
+  size?: "default" | "sm" | "lg";
 }
 
 function EditableCombobox({
@@ -41,8 +39,6 @@ function EditableCombobox({
   defaultValue = "",
   onValueChange,
   placeholder = "Type or select...",
-  searchPlaceholder = "Search...",
-  emptyMessage = "No results found.",
   disabled = false,
   className,
   size = "default",
@@ -52,46 +48,44 @@ function EditableCombobox({
   onBlur,
   ...rest
 }: EditableComboboxProps) {
-  const [open, setOpen] = React.useState(false)
-  const [internalValue, setInternalValue] = React.useState(defaultValue)
-  const inputRef = React.useRef<HTMLInputElement>(null)
-  const triggerRef = React.useRef<HTMLDivElement>(null)
+  const [open, setOpen] = React.useState(false);
+  const [internalValue, setInternalValue] = React.useState(defaultValue);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const isControlled = controlledValue !== undefined
-  const currentValue = isControlled ? controlledValue : internalValue
+  const isControlled = controlledValue !== undefined;
+  const currentValue = isControlled ? controlledValue : internalValue;
 
   const handleChange = React.useCallback(
     (newValue: string) => {
       if (!isControlled) {
-        setInternalValue(newValue)
+        setInternalValue(newValue);
       }
-      onValueChange?.(newValue)
+      onValueChange?.(newValue);
     },
-    [isControlled, onValueChange]
-  )
+    [isControlled, onValueChange],
+  );
 
   const handleSelect = React.useCallback(
     (selectedValue: string) => {
-      handleChange(selectedValue)
-      setOpen(false)
-      setTimeout(() => inputRef.current?.focus(), 0)
+      handleChange(selectedValue);
+      setOpen(false);
+      setTimeout(() => inputRef.current?.focus(), 0);
     },
-    [handleChange]
-  )
+    [handleChange],
+  );
 
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      e.preventDefault()
+      e.preventDefault();
     }
-  }, [])
+  }, []);
 
-  const inputId = id || name
+  const inputId = id || name;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <div
-          ref={triggerRef}
           className={cn(
             "group relative flex h-9 w-full min-w-0 items-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none",
             "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
@@ -100,7 +94,7 @@ function EditableCombobox({
               "border-destructive ring-3 ring-destructive/20 focus-within:border-destructive focus-within:ring-destructive/20",
             size === "sm" && "h-8 text-sm",
             size === "lg" && "h-10",
-            className
+            className,
           )}
           aria-invalid={ariaInvalid}
         >
@@ -117,11 +111,11 @@ function EditableCombobox({
             className={cn(
               "h-full w-full min-w-0 flex-1 bg-transparent pe-9 ps-2.5 text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               size === "sm" && "ps-2 text-sm",
-              size === "lg" && "ps-3 text-base"
+              size === "lg" && "ps-3 text-base",
             )}
             value={currentValue}
             onChange={(e) => handleChange(e.target.value)}
-            onFocus={() => setOpen(true)}
+            onClick={(e) => e.stopPropagation()}
             onKeyDown={handleKeyDown}
             onBlur={onBlur}
             placeholder={placeholder}
@@ -129,11 +123,11 @@ function EditableCombobox({
             autoComplete="off"
             {...rest}
           />
-          <span className="pointer-events-none absolute inset-y-0 flex items-center justify-center inset-e-2.5 text-muted-foreground">
+          <span className="absolute inset-y-0 flex items-center justify-center inset-e-0 text-muted-foreground border-l px-2 hover:bg-blue-100 cursor-pointer">
             <ChevronDownIcon
               className={cn(
                 "size-4 shrink-0 opacity-50 transition-transform duration-200",
-                open && "rotate-180"
+                open && "rotate-180",
               )}
               aria-hidden="true"
             />
@@ -146,35 +140,29 @@ function EditableCombobox({
         sideOffset={4}
       >
         <Command
-          value={currentValue}
+          value={currentValue as string}
           filter={(value, search) => {
-            const option = options.find((o) => o.value === value)
-            if (!option) return 0
+            const option = options.find((o) => o.label === String(value));
+            if (!option) return 0;
             return option.label.toLowerCase().includes(search.toLowerCase())
               ? 1
-              : 0
+              : 0;
           }}
         >
-          <CommandInput
-            placeholder={searchPlaceholder}
-            value={currentValue}
-            onValueChange={handleChange}
-          />
           <CommandList id={`${inputId}-listbox`} role="listbox">
-            <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={() => handleSelect(option.value)}
+                  key={option.label}
+                  value={option.label}
+                  onSelect={() => handleSelect(option.label)}
                 >
                   <CheckIcon
                     className={cn(
                       "size-4 shrink-0",
-                      currentValue === option.value
+                      currentValue === option.label
                         ? "opacity-100"
-                        : "opacity-0"
+                        : "opacity-0",
                     )}
                     aria-hidden="true"
                   />
@@ -186,11 +174,11 @@ function EditableCombobox({
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
 export {
   EditableCombobox,
   type EditableComboboxOption,
   type EditableComboboxProps,
-}
+};
